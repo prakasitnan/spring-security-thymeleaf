@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Please Log In</title>
+</head>
+<body>
+    <h1 th:text="#{welcome}"></h1>
+    <div>
+        <select id="locale" onchange="changeLang()">
+            <option/>
+            <option value="en" data-th-text="#{switch-en}"/>
+            <option value="th" data-th-text="#{switch-th}"/>
+        </select>
+    </div>
+    <script type="text/javascript">
+        function changeLang() {
+            let lang = document.getElementById('locale').value;
+            let url = window.location.href;
+
+            let href = new URL(url);
+            if (url.indexOf('?') > 0) {
+                href.searchParams.set("lang", lang);
+            } else {
+                href += "?lang="+lang;
+            }
+
+            window.location.href = href;
+        }
+
+
+    </script>
+</body>
+</html>
