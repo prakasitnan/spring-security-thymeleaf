@@ -1,4 +1,4 @@
-package com.github.prakasitnan.springsecuritythymeleaf.configs;
+package com.github.prakasitnan.springsecuritythymeleaf.configs.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,19 +17,25 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // Set Spring Security Filter Chain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(Customizer.withDefaults())
+                // set up login form
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
                         .defaultSuccessUrl("/home")
                         .failureUrl("/login?error=true"))
+                // set up logout
                 .logout(logout -> logout
                         .logoutUrl("/logout").permitAll()
                         .logoutSuccessUrl("/login?logout=true")
                 )
+                // set up limit access path
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/bootstrap/**").permitAll()
+                        .requestMatchers("/bootstrapPage/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest()
                         .authenticated()
@@ -37,6 +43,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Set user in memory user detail
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user1 = User.withUsername("user1")
@@ -55,6 +62,7 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user1, user2, admin);
     }
 
+    // password encoder in bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

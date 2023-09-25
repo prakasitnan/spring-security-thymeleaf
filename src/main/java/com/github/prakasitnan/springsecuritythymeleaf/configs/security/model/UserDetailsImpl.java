@@ -1,4 +1,4 @@
-package com.github.prakasitnan.springsecuritythymeleaf.configs.model;
+package com.github.prakasitnan.springsecuritythymeleaf.configs.security.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

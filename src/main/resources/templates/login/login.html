@@ -1,23 +1,39 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Please Log In</title>
-</head>
-<body>
-    <h1 th:text="#{login}"></h1>
-    <div th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div th:if="${param.logout}">
-        You have been logged out.
-    </div>
-    <form th:action="@{/login}" method="post">
-        <div>
-            <input type="text" name="username" placeholder="Username"/>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/public.html}">
+    <head>
+        <title>Please Login</title>
+        <style>
+            .form-sign {
+                max-width: 330px;
+                padding: 1rem;
+            }
+        </style>
+    </head>
+    <body layout:fragment="body"  >
+        <div class="container" >
+            <div class="form-sign w-100 m-auto">
+                <h1 th:text="#{login}"></h1>
+                <div th:if="${param.error}">
+                    Invalid username and password.
+                </div>
+                <div th:if="${param.logout}">
+                    You have been logged out.
+                </div>
+                <form th:action="@{/login}" method="post">
+                    <div class="form-floating">
+                        <input class="form-control" th:id="username" type="text" name="username"  th:placeholder="Username"/>
+                        <label th:for="username">Username</label>
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control" type="password" name="password" th:placeholder="Password"/>
+                        <label th:for="password">Password</label>
+                    </div>
+                    <input class="btn btn-primary w-100 py-2 mt-2" type="submit" value="Log in"/>
+                </form>
+            </div>
         </div>
-        <div>
-            <input type="password" name="password" placeholder="Password"/>
-        </div>
-        <input type="submit" value="Log in"/>
-    </form>
-</body>
+    </body>
+
 </html>

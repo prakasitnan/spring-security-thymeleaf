@@ -1,11 +1,188 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Please Log In</title>
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/protected.html}">
+<head >
+    <style>
+        .red {
+            color: red;
+        }
+
+        .blue {
+            color: blue;
+        }
+
+        .first-no {
+            color: white;
+            background-color: black;
+        }
+
+        .col {
+
+        }
+    </style>
 </head>
-<body>
-    <h1>Home</h1>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout"/>
-    </form>
-</body>
+<main layout:fragment="body">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h1">[[#{home}]]</h1>
+    </div>
+    <div>
+
+        <div class="row">
+            <h1>Standard Expression Syntax</h1>
+        </div>
+        <div class="row-col">
+            <div class="col">
+                <p>${...} <b> = Variable Expressions</b></p>
+            </div>
+            <div class="col">
+                <p>*{...} <b> = Selection Variable Expressions</b></p>
+            </div>
+            <div class="col">
+                <p>#{...} <b> = Message Expressions</b> from i18n message</p>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <h1>Expressions on selections (*{})</h1>
+        </div>
+        <div class="row">
+            <div th:object="${product_1}">
+                <p>Product Id :  <span th:text="*{id}"></span> </p>
+                <p>Product Name :  <span th:text="*{name}"></span> </p>
+                <p>Product Price :  <span th:text="*{price}"></span> </p>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <h1>Link Url</h1>
+        </div>
+        <div>
+            <p>@{/product/1}</p>
+            <a th:href="@{/product/1}">Link</a>
+        </div>
+
+
+        <div class="row">
+            <h1>Literals</h1>
+        </div>
+        <div class="row-col">
+            <div>
+                <p>Text <span th:text="'Text '"></span></p>
+            </div>
+            <div>
+                <p>Number <span th:text="2013 + 3"></span></p>
+            </div>
+            <div>
+                <p>Boolean <span th:if="${(1 == 1) == true}">true</span></p>
+            </div>
+            <div>
+<!--                <p>Null <span th:text=""></span></p>-->
+            </div>
+        </div>
+
+        <div>
+            <h1>Literal substitution</h1>
+        </div>
+        <div class="row-col">
+            <span th:text="|Welcome to our appplication, ${userDetails.username}!|"></span>
+            <span th:text="${userDetails.username}+' '+|${userDetails.username}|"></span>
+        </div>
+
+        <div>
+            <h1>Arithmetic operations</h1>
+        </div>
+        <div class="row-col">
+            <span th:with="isEven=(${product_1.price} % 2 == 0)">isEven</span>
+        </div>
+
+        <div>
+            <h1>Comparators and Equality</h1>
+        </div>
+        <div class="row-col">
+            <div th:if="${product_1.price} &gt; 20">price granter than 20</div>
+            <span th:text="'Execution mode is ' + ((${product_1.inStock}) ? 'In Stock' : 'Out of Stock')"></span>
+        </div>
+
+        <div>
+            <h1>Conditional expressions</h1>
+        </div>
+        <div class="row-col">
+            <span th:class="${product_1.inStock}? 'red' : 'blue'">Product stock</span>
+            <span th:class="${product_1.inStock}? (${product_1.id == 1}? 'first-no' : 'red') : 'blue'">First no</span>
+            <span th:class="${product_1.inStock}? 'alt'">alt</span>
+        </div>
+
+        <div>
+            <h1>The No-Operation token</h1>
+        </div>
+        <div class="row">
+            <span th:text="${product_1.comments} ?: _">Product no comment</span>
+        </div>
+
+        <div>
+            <h1>Data Conversion/ Formatting</h1>
+        </div>
+        <div class="row">
+            <span th:text="${{product_1.stockDate}}"/>
+        </div>
+
+        <div class="row">
+            <!-- itelator -->
+            <div th:unless="${#lists.isEmpty(productList)}">
+                <h2 th:utext="#{table.product.title}"></h2>
+                <h2>[(#{table.product.title})]</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th th:text="#{table.no}"></th>
+                            <th th:text="#{table.product.id}"></th>
+                            <th th:text="#{table.product.name}">type</th>
+                            <th th:text="#{table.product.price}">price</th>
+                            <th th:text="#{table.product.inStock}">in stock</th>
+                            <th th:text="#{table.product.date}">date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sb,iterStat : ${productList}">
+                            <td>[[${iterStat.index + 1}]]</td>
+                            <td th:text="${sb.id}"></td>
+                            <td th:text="${sb.name}"></td>
+                            <td th:text="${#numbers.formatDecimal(sb.price, 2,2)}"></td>
+                            <td th:text="${(sb.inStock) ? 'Stock': 'Out Of Stock'}"></td>
+                            <td th:text="${#dates.format(sb.stockDate, 'dd/MMM/yyyy')}"></td>
+                            <td><a th:href="@{/product/{id}(id=${sb.id})}">view</a> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script th:inline="javascript">
+
+        let tableTitle = /*[[#{table.product.title}]]*/null;
+
+
+        function changeLang() {
+            let lang = document.getElementById('locale').value;
+            let url = window.location.href;
+
+            let href = new URL(url);
+            if (url.indexOf('?') > 0) {
+                href.searchParams.set("lang", lang);
+            } else {
+                href += "?lang="+lang;
+            }
+
+            window.location.href = href;
+        }
+
+
+    </script>
+</main>
 </html>
